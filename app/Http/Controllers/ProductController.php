@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Product;
+use App\Http\Requests\StoreProductRequest;
 use Illuminate\Http\Request;
 
 class ProductController extends Controller
@@ -36,12 +37,8 @@ class ProductController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function store(StoreProductRequest $request)
     {
-        $request->validate([
-            'name' => 'required',
-            'detail' => 'required',
-        ]);
         Product::create($request->all());
         return redirect()->route('products.index')
                         ->with('success', 'Product created successfully.');
@@ -76,12 +73,8 @@ class ProductController extends Controller
      * @param  \App\Models\Product  $product
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, Product $product)
+    public function update(StoreProductRequest $request, Product $product)
     {
-        $request->validate([
-            'name' => 'required',
-            'detail' => 'required',
-        ]);
         $product->update($request->all());
         return redirect()->route('products.index')
                         ->with('success', 'Product updated successfully.');
