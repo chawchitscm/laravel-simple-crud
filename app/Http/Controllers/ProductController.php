@@ -5,9 +5,20 @@ namespace App\Http\Controllers;
 use App\Models\Product;
 use App\Http\Requests\StoreProductRequest;
 use Illuminate\Http\Request;
+use App\Interfaces\Services\Product\ProductServiceInterface;
 
 class ProductController extends Controller
 {
+    private $productInterface;
+    
+    /**
+     * Create controller instance
+     * 
+     */
+    public function __construct(ProductServiceInterface $productInterface) {
+        $this->productInterface = $productInterface;
+    }
+
     /**
      * Display a listing of the resource.
      *
@@ -15,8 +26,7 @@ class ProductController extends Controller
      */
     public function index()
     {
-        $products = Product::latest()->paginate(5);
-        
+        $products = $this->productInterface->getProductList();
         return view('products.index', compact('products'))
             ->with('i', (request()->input('page', 1)-1)*5);
     }
@@ -39,7 +49,7 @@ class ProductController extends Controller
      */
     public function store(StoreProductRequest $request)
     {
-        Product::create($request->all());
+        $this->productInterface->storeProduct($request);
         return redirect()->route('products.index')
             ->with('success', 'Product created successfully.');
     }
@@ -75,8 +85,7 @@ class ProductController extends Controller
      */
     public function update(StoreProductRequest $request, Product $product)
     {
-        $product->update($request->all());
-
+        $this->productInterface->updateProduct($request, $product);
         return redirect()->route('products.index')
             ->with('success', 'Product updated successfully.');
     }
@@ -89,8 +98,7 @@ class ProductController extends Controller
      */
     public function destroy(Product $product)
     {
-        $product->delete();
-        
+        $this->productInterface->deleteProduct($product);
         return redirect()->route('products.index')
             ->with('success', 'Product deleted successfully.');
     }
