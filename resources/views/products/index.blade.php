@@ -1,6 +1,14 @@
 @extends('products.layout')
 
 @section('content')
+<div class="row" style="margin-bottom: 20px;">
+  <div class="col-lg-12">
+    <div class="pull-right">
+      <a href="{{ route('user#logoutUser') }}" class="btn btn-primary">Log out</a>
+    </div>
+  </div>
+</div>
+
 <div class="row">
   <div class="col-lg-12 margin-tb">
     <div class="pull-left">

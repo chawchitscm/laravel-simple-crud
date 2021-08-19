@@ -3,6 +3,7 @@
 use Illuminate\Support\Facades\Route;
 
 use App\Http\Controllers\ProductController;
+use App\Http\Controllers\AuthController;
 
 /*
 |--------------------------------------------------------------------------
@@ -18,4 +19,15 @@ use App\Http\Controllers\ProductController;
 Route::get('/', function () {
     return view('welcome');
 });
-Route::resource('products', ProductController::class);
+
+Route::group(['prefix' => 'auth'], function () {
+    Route::view('/register', '/auth/register')->name('user#register')->middleware('auth.check');
+    Route::view('/login', '/auth/login')->name('user#login')->middleware('auth.check');
+    Route::post('/store', [AuthController::class, 'storeUser'])->name('user#storeUser');
+    Route::post('/authenticate', [AuthController::class, 'authenticateUser'])->name('user#authenticateUser');
+    Route::get('/logout', [AuthController::class, 'logoutUser'])->name('user#logoutUser');
+});
+
+Route::resource('products', ProductController::class)->middleware('auth.check');
+
+
